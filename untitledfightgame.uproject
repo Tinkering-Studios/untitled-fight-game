@@ -124,6 +124,10 @@
 		{
 			"Name": "SubversionSourceControl",
 			"Enabled": false
+		},
+		{
+			"Name": "CommonUI",
+			"Enabled": true
 		}
 	]
 }
