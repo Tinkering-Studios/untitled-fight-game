@@ -14,8 +14,19 @@ class UNTITLEDFIGHTGAME_API AMainGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 
+protected:
+
 	virtual void BeginPlay() override;
 
+#pragma region Components
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Stats, meta = (AllowPrivateAccess = "true"))
+	class UStatisticsComponent* StatsComponent;
+
+#pragma endregion
+
 public:
+
+	FORCEINLINE class UStatisticsComponent* GetStatisticsComponent() const { return StatsComponent; }
 	
 };
