@@ -7,25 +7,19 @@ struct FStatisticInformation
 {
 	GENERATED_BODY()
 
-	FStatisticInformation()
-	{
-		currentValue = 0;
-		maxValue = 0;
-	}
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	float currentValue{0};
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	float currentValue;
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	float maxValue;
+	float maxValue{0};
 
 	friend bool operator ==(const FStatisticInformation& x, const FStatisticInformation& y)
 	{
-		return (x.currentValue == y.currentValue);
+		return (x.currentValue == y.currentValue && x.maxValue == y.maxValue);
 	}
 
 	friend bool operator !=(const FStatisticInformation& x, const FStatisticInformation& y)
 	{
-		return (x.currentValue != y.currentValue);
+		return (x.currentValue != y.currentValue && x.maxValue != y.maxValue);
 	}
 };

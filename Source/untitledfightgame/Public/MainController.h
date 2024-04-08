@@ -9,6 +9,9 @@
 #include "GameFramework/PlayerController.h"
 #include "MainController.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FLightAttack, bool, IsRight);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FHeavyAttack, bool, IsRight);
+
 /**
  * 
  */
@@ -83,6 +86,16 @@ public:
 	UPROPERTY(EditAnywhere, Category="Input|Controller")
 	float ControllerRotationSpeed = 45;
 	
-#pragma endregion 
+#pragma endregion
+	
+#pragma region Delegates
+
+	UPROPERTY(BlueprintAssignable)
+	FLightAttack OnLightAttack;
+
+	UPROPERTY(BlueprintAssignable)
+	FHeavyAttack OnHeavyAttack;
+
+#pragma endregion
 	
 };

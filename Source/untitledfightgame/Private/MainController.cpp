@@ -68,18 +68,23 @@ void AMainController::Rotate(const FInputActionValue& value)
 
 void AMainController::LightPunchLeft()
 {
+	// We use these to let the player character handle animations.
+	OnLightAttack.Broadcast(false);
 }
 
 void AMainController::LightPunchRight()
 {
+	OnLightAttack.Broadcast(true);
 }
 
 void AMainController::HeavyPunchLeft()
 {
+	OnHeavyAttack.Broadcast(false);
 }
 
 void AMainController::HeavyPunchRight()
 {
+	OnHeavyAttack.Broadcast(true);
 }
 
 void AMainController::Jump()
