@@ -42,7 +42,7 @@ public:
 	 * @return The Statistic Information for the provided Tag.
 	 */
 	UFUNCTION(BlueprintPure, Category="Statistics")
-	FORCEINLINE FStatisticInformation GetStatInfoByTag(const FGameplayTag& tag) const
+	FORCEINLINE FStatisticInformation GetStatInfoByTag(const FGameplayTag tag) const
 	{
 		return statistics.FindRef(tag);
 	};
@@ -53,7 +53,7 @@ public:
 	 * @param value The new Current Value.
 	 */
 	UFUNCTION(BlueprintCallable, Category="Statistics")
-	void SetCurrentValueOfStatistic(const FGameplayTag& tag, float value);
+	void SetCurrentValueOfStatistic(const FGameplayTag tag, float value);
 
 	/**
 	 * @brief Set the Max Value of a Statistic. This will outright set the Max Value.
@@ -61,7 +61,7 @@ public:
 	 * @param value The new Max Value.
 	 */
 	UFUNCTION(BlueprintCallable, Category="Statistics")
-	void SetMaxValueOfStatistic(const FGameplayTag& tag, float value);
+	void SetMaxValueOfStatistic(const FGameplayTag tag, float value);
 
 	/**
 	 * @brief Modify the Current Value of a Statistic.
@@ -70,7 +70,7 @@ public:
 	 * @param value The value to add/subtract from the Current Value.
 	 */
 	UFUNCTION(BlueprintCallable, Category="Statistics")
-	void ModifyCurrentValueOfStatistic(const FGameplayTag& tag, float value);
+	void ModifyCurrentValueOfStatistic(const FGameplayTag tag, float value);
 
 	/**
 	 * @brief Modify the Max Value of a Statistic.
@@ -79,7 +79,7 @@ public:
 	 * @param value The value to add/subtract from Max.
 	 */
 	UFUNCTION(BlueprintCallable, Category="Statistics")
-	void ModifyMaxValueOfStatistic(const FGameplayTag& tag, float value);
+	void ModifyMaxValueOfStatistic(const FGameplayTag tag, float value);
 
 #pragma endregion
 

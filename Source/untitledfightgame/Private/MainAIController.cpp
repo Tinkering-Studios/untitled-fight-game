@@ -18,7 +18,7 @@ ETeamAttitude::Type AMainAIController::GetTeamAttitudeTowards(const AActor& Othe
 	// Make sure team agent is valid.
 	if(!TeamAgent)
 	{
-		return ETeamAttitude::Neutral;
+		return ETeamAttitude::Hostile;
 	}
 
 	return (TeamAgent->GetGenericTeamId() == TeamId) ? ETeamAttitude::Friendly : ETeamAttitude::Hostile;

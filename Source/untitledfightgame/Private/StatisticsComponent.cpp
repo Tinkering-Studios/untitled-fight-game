@@ -9,7 +9,7 @@ UStatisticsComponent::UStatisticsComponent()
 	PrimaryComponentTick.bCanEverTick = false;
 }
 
-void UStatisticsComponent::ModifyCurrentValueOfStatistic(const FGameplayTag& tag, float value)
+void UStatisticsComponent::ModifyCurrentValueOfStatistic(const FGameplayTag tag, float value)
 {
 	FStatisticInformation statInfo = statistics.FindRef(tag);
 
@@ -31,7 +31,7 @@ void UStatisticsComponent::ModifyCurrentValueOfStatistic(const FGameplayTag& tag
 		OnStatisticReachedZero.Broadcast(tag);
 }
 
-void UStatisticsComponent::SetCurrentValueOfStatistic(const FGameplayTag& tag, float value)
+void UStatisticsComponent::SetCurrentValueOfStatistic(const FGameplayTag tag, float value)
 {
 	FStatisticInformation statInfo = statistics.FindRef(tag);
 
@@ -50,7 +50,7 @@ void UStatisticsComponent::SetCurrentValueOfStatistic(const FGameplayTag& tag, f
 		OnStatisticReachedZero.Broadcast(tag);
 }
 
-void UStatisticsComponent::ModifyMaxValueOfStatistic(const FGameplayTag& tag, float value)
+void UStatisticsComponent::ModifyMaxValueOfStatistic(const FGameplayTag tag, float value)
 {
 	FStatisticInformation statInfo = statistics.FindRef(tag);
 
@@ -65,7 +65,7 @@ void UStatisticsComponent::ModifyMaxValueOfStatistic(const FGameplayTag& tag, fl
 	OnStatisticUpdated.Broadcast(tag);
 }
 
-void UStatisticsComponent::SetMaxValueOfStatistic(const FGameplayTag& tag, float value)
+void UStatisticsComponent::SetMaxValueOfStatistic(const FGameplayTag tag, float value)
 {
 	FStatisticInformation statInfo = statistics.FindRef(tag);
 	statInfo.maxValue = value;
