@@ -1,7 +1,10 @@
 // Copyright - Tinkering Studios
 
 #include "BaseCharacter.h"
+
+#include "MainGameMode.h"
 #include "StatisticsComponent.h"
+#include "TimeDilationManager.h"
 
 // Sets default values
 ABaseCharacter::ABaseCharacter()
@@ -28,6 +31,10 @@ float ABaseCharacter::TakeDamage(float Damage, FDamageEvent const& DamageEvent, 
 {
 	// Damage!
 	StatsComponent->ModifyCurrentValueOfStatistic(HealthTag, -Damage);
+
+	AMainGameMode* GameMode = Cast<AMainGameMode>(GetWorld()->GetAuthGameMode());
+
+	GameMode->GetTimeDilationManager()->SetTime(0.2, .1);
 	
 	return Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
 }

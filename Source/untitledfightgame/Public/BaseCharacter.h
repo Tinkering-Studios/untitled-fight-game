@@ -32,6 +32,12 @@ protected:
 
 #pragma endregion
 
+public:
+
+	FORCEINLINE class UStatisticsComponent* GetStatisticsComponent() const { return StatsComponent; }
+    
+private:
+
 	FGameplayTag HealthTag;
 
 };

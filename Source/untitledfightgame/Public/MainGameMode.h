@@ -14,19 +14,23 @@ class UNTITLEDFIGHTGAME_API AMainGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 
+public:
+	// Sets default values for this character's properties
+	AMainGameMode();
+
 protected:
 
 	virtual void BeginPlay() override;
 
 #pragma region Components
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Stats, meta = (AllowPrivateAccess = "true"))
-	class UStatisticsComponent* StatsComponent;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Time Dilation", meta = (AllowPrivateAccess = "true"))
+	class UTimeDilationManager* DilationManager;
 
 #pragma endregion
 
 public:
 
-	FORCEINLINE class UStatisticsComponent* GetStatisticsComponent() const { return StatsComponent; }
+	FORCEINLINE class UTimeDilationManager* GetTimeDilationManager() const { return DilationManager; }
 	
 };
