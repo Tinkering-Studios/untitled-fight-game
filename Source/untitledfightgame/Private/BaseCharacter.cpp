@@ -34,7 +34,12 @@ float ABaseCharacter::TakeDamage(float Damage, FDamageEvent const& DamageEvent, 
 
 	AMainGameMode* GameMode = Cast<AMainGameMode>(GetWorld()->GetAuthGameMode());
 
-	GameMode->GetTimeDilationManager()->SetTime(0.2, .1);
+	bool IsDeathHit = StatsComponent->GetStatInfoByTag(HealthTag).currentValue == 0;
+
+	// Slow down time for a bit. We do it longer if health is zero.
+	GameMode->GetTimeDilationManager()->SetTime(0.3, IsDeathHit ? .1 : .025);
+
+	APlayerCameraManager::PlayWorldCameraShake(GetWorld(), IsDeathHit ? BigHitScreenShake : HitScreenShake, GetActorLocation(), 0, 500, 1, false);
 	
 	return Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
 }

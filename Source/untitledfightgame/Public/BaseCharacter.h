@@ -35,6 +35,12 @@ protected:
 public:
 
 	FORCEINLINE class UStatisticsComponent* GetStatisticsComponent() const { return StatsComponent; }
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Screen Shake");
+	TSubclassOf<class UCameraShakeBase> HitScreenShake;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Screen Shake");
+	TSubclassOf<class UCameraShakeBase> BigHitScreenShake;
     
 private:
 

@@ -22,13 +22,13 @@ void UStatisticsComponent::ModifyCurrentValueOfStatistic(const FGameplayTag& tag
 	// Need to now overwrite the value in "statistics"
 	statistics.Add(tag, statInfo);
 
+	OnStatisticUpdated.Broadcast(tag);
+
 	if(statInfo.currentValue == statInfo.maxValue)
 		OnStatisticReachedMax.Broadcast(tag);
 
 	if(statInfo.currentValue == 0)
 		OnStatisticReachedZero.Broadcast(tag);
-
-	OnStatisticUpdated.Broadcast(tag);
 }
 
 void UStatisticsComponent::SetCurrentValueOfStatistic(const FGameplayTag& tag, float value)
@@ -41,13 +41,13 @@ void UStatisticsComponent::SetCurrentValueOfStatistic(const FGameplayTag& tag, f
 	// Need to now overwrite the value in "statistics"
 	statistics.Add(tag, statInfo);
 
+	OnStatisticUpdated.Broadcast(tag);
+
 	if(statInfo.currentValue == statInfo.maxValue)
 		OnStatisticReachedMax.Broadcast(tag);
 
 	if(statInfo.currentValue == 0)
 		OnStatisticReachedZero.Broadcast(tag);
-
-	OnStatisticUpdated.Broadcast(tag);
 }
 
 void UStatisticsComponent::ModifyMaxValueOfStatistic(const FGameplayTag& tag, float value)
