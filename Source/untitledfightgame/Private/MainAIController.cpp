@@ -14,9 +14,10 @@ ETeamAttitude::Type AMainAIController::GetTeamAttitudeTowards(const AActor& Othe
 	}
 	
 	const IGenericTeamAgentInterface* TeamAgent = Cast<IGenericTeamAgentInterface>(OtherPawn->GetController());
+	const AMainAIController* AIController = Cast<AMainAIController>(OtherPawn->GetController());
 
 	// Make sure team agent is valid.
-	if(!TeamAgent)
+	if(!TeamAgent || !AIController)
 	{
 		return ETeamAttitude::Hostile;
 	}
