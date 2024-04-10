@@ -8,7 +8,7 @@ public class untitledfightgame : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "CommonUI", "UMG" });
 		
 		PublicDependencyModuleNames.AddRange(new string[] { "GameplayTags", "EnhancedInput", "AIModule", "CommonInput" });
 		PrivateDependencyModuleNames.AddRange(new string[] { "GameplayTags", "EnhancedInput", "AIModule", "CommonInput" });
