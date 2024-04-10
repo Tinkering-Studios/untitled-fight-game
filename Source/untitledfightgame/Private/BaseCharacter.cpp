@@ -2,6 +2,7 @@
 
 #include "BaseCharacter.h"
 
+#include "ActionManager.h"
 #include "MainGameMode.h"
 #include "StatisticsComponent.h"
 #include "TimeDilationManager.h"
@@ -12,6 +13,8 @@ ABaseCharacter::ABaseCharacter()
 	PrimaryActorTick.bCanEverTick = false;
 
 	StatsComponent = CreateDefaultSubobject<UStatisticsComponent>(TEXT("StatsComponent"));
+
+	ActionsManager = CreateDefaultSubobject<UActionManager>(TEXT("ActionsManager"));
 
 	// Can't put this as a static variable because who knows.
 	// This engine tries to be C# so badly and refuses to do anything normal/modern because they live in C++99 land.

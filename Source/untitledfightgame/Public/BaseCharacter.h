@@ -30,11 +30,16 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Stats, meta = (AllowPrivateAccess = "true"))
 	class UStatisticsComponent* StatsComponent;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Actions, meta = (AllowPrivateAccess = "true"))
+	class UActionManager* ActionsManager;
+
 #pragma endregion
 
 public:
 
 	FORCEINLINE class UStatisticsComponent* GetStatisticsComponent() const { return StatsComponent; }
+	
+	FORCEINLINE class UActionManager* GetActionsManager() const { return ActionsManager; }
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Screen Shake");
 	TSubclassOf<class UCameraShakeBase> HitScreenShake;
