@@ -20,7 +20,11 @@ void UTimeDilationManager::SetTime(float Dilation, float Duration)
 	FTimerHandle handle;
 	
 	GetWorld()->GetTimerManager().SetTimer(handle, FTimerDelegate::CreateLambda([&] {
-		UGameplayStatics::SetGlobalTimeDilation(GetWorld(), 1);
+		// Make sure world is valid. This can be invalid if the world is killed when the lambda is fired.
+		if(GetWorld())
+		{
+			UGameplayStatics::SetGlobalTimeDilation(GetWorld(), 1);
+		}
 	}), Duration, false);
 }
 
