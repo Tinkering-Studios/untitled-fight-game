@@ -7,19 +7,27 @@
 #include "Components/ActorComponent.h"
 #include "ActionManager.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FActionStarted, FGameplayTag, ActionTag);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FActionFinished, FGameplayTag, ActionTag);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class UNTITLEDFIGHTGAME_API UActionManager : public UActorComponent
 {
 	GENERATED_BODY()
 
-protected:
-	// Called when the game starts
-	virtual void BeginPlay() override;
-
 public:	
 	// Sets default values for this component's properties
 	UActionManager();
+
+#pragma region Delegates
+
+	UPROPERTY(BlueprintAssignable)
+	FActionStarted OnActionStarted;
+
+	UPROPERTY(BlueprintAssignable)
+	FActionFinished OnActionFinished;
+
+#pragma endregion
 
 	UFUNCTION(BlueprintCallable, Category="Actions")
 	UAnimMontage* GetActionFromTag(const FGameplayTag tag);
@@ -40,5 +48,9 @@ public:
 	TMap<FGameplayTag, UAnimMontage*> ActionsList;
 
 	FGameplayTag CurrentlyPlayingAction;
+
+protected:
+	// Called when the game starts
+	virtual void BeginPlay() override;
 		
 };

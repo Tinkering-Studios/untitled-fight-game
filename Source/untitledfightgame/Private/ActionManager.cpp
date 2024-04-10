@@ -18,11 +18,18 @@ UAnimMontage* UActionManager::GetActionFromTag(const FGameplayTag tag)
 
 void UActionManager::ExecuteAction(const FGameplayTag tag)
 {
+	if(!tag.IsValid())
+	{
+		return;
+	}
+	
 	// Kill the current action.
 	StopCurrentAction();
 	
 	Cast<ACharacter>(GetOwner())->PlayAnimMontage(ActionsList[tag]);
 	CurrentlyPlayingAction = tag;
+	
+	OnActionStarted.Broadcast(tag);
 }
 
 void UActionManager::StopCurrentAction()
@@ -33,6 +40,9 @@ void UActionManager::StopCurrentAction()
 	}
 
 	Cast<ACharacter>(GetOwner())->StopAnimMontage(GetCurrentAnim());
+
+	OnActionFinished.Broadcast(CurrentlyPlayingAction);
+
 	CurrentlyPlayingAction = {};
 }
 
