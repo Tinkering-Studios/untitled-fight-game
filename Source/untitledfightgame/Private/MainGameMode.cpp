@@ -17,9 +17,7 @@ void AMainGameMode::BeginPlay()
 
 void AMainGameMode::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-	// Kill all timers in DilationManager, so none of them try access the world after shutdown.
-	// Apparently 
-	GetWorldTimerManager().ClearAllTimersForObject(DilationManager);
+	DilationManager->PrepareDestroy();
 	
 	Super::EndPlay(EndPlayReason);
 }

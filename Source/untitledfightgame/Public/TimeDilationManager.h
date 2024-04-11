@@ -19,8 +19,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Time Dilation")
 	void SetTime(float Dilation, float Duration);
 
+	UFUNCTION(BlueprintCallable, Category="Time Dilation")
+	void PrepareDestroy();
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
+
+	FTimerHandle handler{};
 		
 };

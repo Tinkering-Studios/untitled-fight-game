@@ -18,14 +18,22 @@ void UTimeDilationManager::SetTime(float Dilation, float Duration)
 	{
 		return;
 	}
+
+	if(handler.IsValid())
+	{
+		GetWorld()->GetTimerManager().ClearTimer(handler);
+		UGameplayStatics::SetGlobalTimeDilation(GetWorld(), 1);
+	}
 	
 	UGameplayStatics::SetGlobalTimeDilation(GetWorld(), Dilation);
 	
-	// because this somehow doesn't go out of scope???? Unreal moment lol
-	// The more you learn C++, the more you realise how bizarre this engine is...
-	FTimerHandle handle;
-	
-	GetWorld()->GetTimerManager().SetTimer(handle, FTimerDelegate::CreateLambda([&] {
+	GetWorld()->GetTimerManager().SetTimer(handler, FTimerDelegate::CreateLambda([&] {
+		// I'm just adding random checks at this point...
+		if(!handler.IsValid())
+		{
+			return;
+		}
+		
 		// Make sure world is valid. This can be invalid if the world is killed when the lambda is fired.
 		// This if check isn't even good enough to stop Unreal from a segfault because GetWorld() returning null is a segfault???????
 		// Even though I check for that???
@@ -35,6 +43,14 @@ void UTimeDilationManager::SetTime(float Dilation, float Duration)
 			UGameplayStatics::SetGlobalTimeDilation(TempWorld, 1);
 		}
 	}), Duration, false);
+}
+
+void UTimeDilationManager::PrepareDestroy()
+{
+	if(handler.IsValid())
+	{
+		GetWorld()->GetTimerManager().ClearTimer(handler);
+	}
 }
 
 
