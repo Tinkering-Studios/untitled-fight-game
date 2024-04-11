@@ -19,15 +19,18 @@ void UStatisticsComponent::ModifyCurrentValueOfStatistic(const FGameplayTag tag,
 	// Now clamp value.
 	statInfo.currentValue = statInfo.currentValue > statInfo.maxValue ? statInfo.maxValue : statInfo.currentValue;
 
+	// Clamp again to make sure it doesn't go below zero.
+	statInfo.currentValue = statInfo.currentValue < 0 ? 0 : statInfo.currentValue;
+
 	// Need to now overwrite the value in "statistics"
 	statistics.Add(tag, statInfo);
 
 	OnStatisticUpdated.Broadcast(tag);
 
-	if(statInfo.currentValue == statInfo.maxValue)
+	if(statInfo.currentValue >= statInfo.maxValue)
 		OnStatisticReachedMax.Broadcast(tag);
 
-	if(statInfo.currentValue == 0)
+	if(statInfo.currentValue <= 0)
 		OnStatisticReachedZero.Broadcast(tag);
 }
 
