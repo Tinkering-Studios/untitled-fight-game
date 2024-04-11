@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "CommonUI/Public/CommonActivatableWidget.h"
-#include "Input/CommonInputMode.h"
+#include "CommonInputModeTypes.h"
 #include "CommonActivatableWidgetFixed.generated.h"
 
 UENUM(BlueprintType)
