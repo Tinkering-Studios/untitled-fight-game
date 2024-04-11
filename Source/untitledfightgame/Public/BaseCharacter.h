@@ -7,6 +7,8 @@
 #include "GameFramework/Character.h"
 #include "BaseCharacter.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FHitEnemy, EAttackType, AttackType);
+
 UCLASS()
 class UNTITLEDFIGHTGAME_API ABaseCharacter : public ACharacter
 {
@@ -18,6 +20,13 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+#pragma region Delegates
+
+	UPROPERTY(BlueprintAssignable, BlueprintCallable)
+	FHitEnemy OnEnemyHit;
+
+#pragma endregion
 
 protected:
 	// Called when the game starts or when spawned
