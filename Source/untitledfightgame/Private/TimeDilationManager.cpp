@@ -27,6 +27,9 @@ void UTimeDilationManager::SetTime(float Dilation, float Duration)
 	
 	GetWorld()->GetTimerManager().SetTimer(handle, FTimerDelegate::CreateLambda([&] {
 		// Make sure world is valid. This can be invalid if the world is killed when the lambda is fired.
+		// This if check isn't even good enough to stop Unreal from a segfault because GetWorld() returning null is a segfault???????
+		// Even though I check for that???
+		// The solution is in EndPlay in MainGameMode.cpp, what a extremely shit engine this is.
 		if(const UWorld* TempWorld = GetWorld())
 		{
 			UGameplayStatics::SetGlobalTimeDilation(TempWorld, 1);
