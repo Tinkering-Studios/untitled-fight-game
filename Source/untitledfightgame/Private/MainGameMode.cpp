@@ -14,3 +14,11 @@ void AMainGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 }
+
+void AMainGameMode::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	// Kill all timers in DilationManager, so none of them try access the world after shutdown.
+	GetWorldTimerManager().ClearAllTimersForObject(DilationManager);
+	
+	Super::EndPlay(EndPlayReason);
+}

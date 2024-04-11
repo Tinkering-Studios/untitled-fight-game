@@ -13,6 +13,12 @@ UTimeDilationManager::UTimeDilationManager()
 
 void UTimeDilationManager::SetTime(float Dilation, float Duration)
 {
+	// Make sure world isn't null.
+	if(!GetWorld())
+	{
+		return;
+	}
+	
 	UGameplayStatics::SetGlobalTimeDilation(GetWorld(), Dilation);
 	
 	// because this somehow doesn't go out of scope???? Unreal moment lol
@@ -21,9 +27,9 @@ void UTimeDilationManager::SetTime(float Dilation, float Duration)
 	
 	GetWorld()->GetTimerManager().SetTimer(handle, FTimerDelegate::CreateLambda([&] {
 		// Make sure world is valid. This can be invalid if the world is killed when the lambda is fired.
-		if(GetWorld())
+		if(const UWorld* TempWorld = GetWorld())
 		{
-			UGameplayStatics::SetGlobalTimeDilation(GetWorld(), 1);
+			UGameplayStatics::SetGlobalTimeDilation(TempWorld, 1);
 		}
 	}), Duration, false);
 }

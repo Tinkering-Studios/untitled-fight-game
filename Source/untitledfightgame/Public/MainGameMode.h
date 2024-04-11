@@ -22,6 +22,8 @@ protected:
 
 	virtual void BeginPlay() override;
 
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
 #pragma region Components
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Time Dilation", meta = (AllowPrivateAccess = "true"))
