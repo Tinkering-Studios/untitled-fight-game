@@ -41,6 +41,9 @@ void UStatisticsComponent::SetCurrentValueOfStatistic(const FGameplayTag tag, fl
 	// If the value is bigger than max, clamp at max, otherwise just set to value.
 	statInfo.currentValue = value > statInfo.maxValue ? statInfo.maxValue : value;
 
+	// Clamp again to make sure it doesn't go below zero.
+	statInfo.currentValue = statInfo.currentValue < 0 ? 0 : statInfo.currentValue;
+
 	// Need to now overwrite the value in "statistics"
 	statistics.Add(tag, statInfo);
 
