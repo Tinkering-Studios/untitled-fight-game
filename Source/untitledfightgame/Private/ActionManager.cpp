@@ -25,6 +25,12 @@ void UActionManager::ExecuteAction(const FGameplayTag tag)
 	
 	// Kill the current action.
 	StopCurrentAction();
+
+	// If Animation is invalid, don't play anything.
+	if(!ActionsList[tag])
+	{
+		return;
+	}
 	
 	Cast<ACharacter>(GetOwner())->PlayAnimMontage(ActionsList[tag]);
 	CurrentlyPlayingAction = tag;

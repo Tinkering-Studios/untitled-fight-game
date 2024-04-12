@@ -6,5 +6,7 @@ UENUM(BlueprintType)
 enum class EAttackType : uint8
 {
 	LightAttack,
-	HeavyAttack
+	HeavyAttack,
+	Kick,
+	Throwable
 };
