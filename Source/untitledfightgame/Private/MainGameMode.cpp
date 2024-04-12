@@ -3,11 +3,13 @@
 
 #include "..\Public\MainGameMode.h"
 
+#include "EventsManager.h"
 #include "TimeDilationManager.h"
 
 AMainGameMode::AMainGameMode()
 {
 	DilationManager = CreateDefaultSubobject<UTimeDilationManager>(TEXT("DilationManager"));
+	EventsManager = CreateDefaultSubobject<UEventsManager>(TEXT("EventsManager"));
 }
 
 void AMainGameMode::BeginPlay()

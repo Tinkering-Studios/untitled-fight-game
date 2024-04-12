@@ -29,6 +29,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Time Dilation", meta = (AllowPrivateAccess = "true"))
 	class UTimeDilationManager* DilationManager;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Events", meta = (AllowPrivateAccess = "true"))
+	class UEventsManager* EventsManager;
+
 #pragma endregion
 
 public:

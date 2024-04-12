@@ -34,7 +34,7 @@ public:
 
 #pragma endregion
 
-	UFUNCTION(BlueprintPure, Category="Events")
+	UFUNCTION(BlueprintCallable, Category="Events")
 	FGameplayTag RequestEvent();
 
 	UFUNCTION(BlueprintCallable, Category="Events")
