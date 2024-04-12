@@ -41,7 +41,8 @@ void UEventsManager::StartEvent(const FGameplayTag tag)
 
 void UEventsManager::StopCurrentEvent()
 {
-	OnEventEnded.Broadcast(GetCurrentEvent());
+	OnEventEnded.Broadcast(CurrentEvent);
+	CurrentEvent = {};
 }
 
 FGameplayTag& UEventsManager::GetCurrentEvent()
