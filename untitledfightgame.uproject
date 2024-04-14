@@ -125,6 +125,10 @@
 		{
 			"Name": "CommonUI",
 			"Enabled": true
+		},
+		{
+			"Name": "CableComponent",
+			"Enabled": false
 		}
 	]
 }
