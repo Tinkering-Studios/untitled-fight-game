@@ -1,7 +1,7 @@
 // Copyright - Tinkering Studios
 
 
-#include "..\Public\MainGameMode.h"
+#include "MainGameMode.h"
 
 #include "EventsManager.h"
 #include "TimeDilationManager.h"
