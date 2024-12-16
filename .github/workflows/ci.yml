@@ -24,7 +24,7 @@ jobs:
       fail-fast: false # Don't cancel other matrix jobs if one fails
       matrix:
         cfg:
-        - { config: Development, os: [self-hosted, Windows, X64], platform: 'Win64', ue_path: 'C:\\Program Files\\Epic Games\\UE_5.5', target_name: 'untitledfightgame', project_path: '${{github.workspace}}\\main\\untitledfightgame.uproject' }
+        - { config: Development, os: [self-hosted, Windows, X64], platform: 'Win64', ue_path: 'C:\\UE_5.5', target_name: 'untitledfightgame', project_path: '${{github.workspace}}\\main\\untitledfightgame.uproject' }
     name: "Windows ${{matrix.cfg.config}}"
     runs-on: ${{matrix.cfg.os}}
     steps:
