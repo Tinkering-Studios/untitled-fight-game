@@ -38,7 +38,7 @@ jobs:
 
       - name: Build Project
         shell: pwsh
-        run: '${{matrix.cfg.ue_path}}\Engine\Build\BatchFiles\RunUAT.bat -project="${{github.workspace}}\main\`${{matrix.cfg.project_file}}" -platform=${{matrix.cfg.platform}} BuildCookRun -nop4 -utf8output -cook -target=${{matrix.cfg.target_name}} -SkipCookingEditorContent -installed -stage -archive -package -build -pak -iostore -compressed -prereqs -archivedirectory="${{github.workspace}}\exports" -distribution -clientconfig=${{matrix.cfg.config}} -serverconfig=${{matrix.cfg.config}} -nodebuginfo -nocompile -nocompileuat'
+        run: '${{matrix.cfg.ue_path}}\Engine\Build\BatchFiles\RunUAT.bat -project="${{github.workspace}}\main\${{matrix.cfg.project_file}}" -platform=${{matrix.cfg.platform}} BuildCookRun -nop4 -utf8output -cook -target=${{matrix.cfg.target_name}} -SkipCookingEditorContent -installed -stage -archive -package -build -pak -iostore -compressed -prereqs -archivedirectory="${{github.workspace}}\exports" -distribution -clientconfig=${{matrix.cfg.config}} -serverconfig=${{matrix.cfg.config}} -nodebuginfo -nocompile -nocompileuat'
 
       - name: Package distributable
         run: cd exports && Compress-Archive . winexport.zip
