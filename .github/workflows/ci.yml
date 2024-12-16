@@ -1,0 +1,98 @@
+name: D++ CI
+on:
+  push:
+    paths:
+      - '**/Config/**'
+      - '**/Content/**'
+      - '**/Source/**'
+  pull_request:
+    paths:
+      - '**/Config/**'
+      - '**/Content/**'
+      - '**/Source/**'
+
+permissions:
+  contents: read
+
+jobs:
+  windows: # Windows x64 and x86 build matrix
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false # Don't cancel other matrix jobs if one fails
+      matrix:
+        cfg:
+        - { name: 'x64', config: Development, os: [self-hosted, Windows, X64], options: '' }
+    name: "Windows ${{matrix.cfg.config}}"
+    runs-on: ${{matrix.cfg.os}}
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@91182cccc01eb5e619899d80e4e971d6181294a7 # v2.10.1
+        with:
+          egress-policy: audit
+
+      - name: Checkout Game
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          path: main
+
+      - name: Build Project
+        run: cmd.exe /c ""C:/Program Files/Epic Games/UE_5.5/Engine/Build/BatchFiles/RunUAT.bat" -ScriptsForProject="${{github.workspace}}/main/untitledfightgame.uproject" -platform=Win64 -project="${{github.workspace}}/main/untitledfightgame.uproject" BuildCookRun -nop4 -utf8output -cook -target=untitledfightgame -unrealexe="C:\Program Files\Epic Games\UE_5.5\Engine\Binaries\Win64\UnrealEditor-Cmd.exe" -platform=Win64 -SkipCookingEditorContent -installed -stage -archive -package -build -pak -iostore -compressed -prereqs -archivedirectory="${{github.workspace}}/exports" -distribution -clientconfig=Shipping -nodebuginfo" -nocompile -nocompileuat
+
+      - name: Package distributable
+        run: cd export && Compress-Archive . winexport.zip
+
+      - name: Upload Binary
+        if: ${{ matrix.cfg.upload }}
+        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
+        with:
+          name: "BloodMoney - Windows ${{matrix.cfg.config}}"
+          path: '${{github.workspace}}/export/winexport.zip'
+
+  cross-compiles:
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        cfg:
+          # Replaced with self-hosted runner
+          # - {name: "ARM64", os: ubuntu-20.04, cmake-options: -DCMAKE_TOOLCHAIN_FILE=cmake/ARM64ToolChain.cmake}
+          # - {name: "ARMv7 HF", os: ubuntu-20.04, cmake-options: -DCMAKE_TOOLCHAIN_FILE=cmake/ARMv7ToolChain.cmake}
+          - {name: "Linux x86", os: ubuntu-20.04, cmake-options: -DCMAKE_TOOLCHAIN_FILE=cmake/LINUXx86ToolChain.cmake -DBUILD_VOICE_SUPPORT=OFF}
+          - {name: "ARMv6", os: ubuntu-20.04, cmake-options: -DCMAKE_TOOLCHAIN_FILE=cmake/ARMv6ToolChain.cmake}
+
+    name: ${{matrix.cfg.name}}
+    runs-on: ${{matrix.cfg.os}}
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@91182cccc01eb5e619899d80e4e971d6181294a7 # v2.10.1
+        with:
+          egress-policy: audit
+
+      - name: Checkout D++
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Install Packages
+        run: sudo sed -i 's/azure\.//' /etc/apt/sources.list && sudo apt update && sudo apt-get install -y cmake rpm
+
+      - name: Generate CMakeFiles
+        run: mkdir build && cd build && sudo cmake ${{matrix.cfg.cmake-options}} -DDPP_NO_VCPKG=ON -DCMAKE_BUILD_TYPE=Release -DAVX_TYPE=AVX0 ..
+
+      - name: Compile Source
+        run: cd build && sudo make -j2
+
+      - name: Package Distributable
+        run: cd build && sudo cpack --verbose || cat /home/runner/work/DPP/DPP/build/_CPack_Packages/Linux/DEB/PreinstallOutput.log
+
+      - name: Upload Binaries (DEB)
+        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
+        with:
+          name: "libdpp - Debian Package ${{matrix.cfg.name}}"
+          path: "${{github.workspace}}/build/*.deb"
+
+      - name: Upload Binaries (RPM)
+        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
+        with:
+          name: "libdpp - RPM Package ${{matrix.cfg.name}}"
+          path: "${{github.workspace}}/build/*.rpm"
