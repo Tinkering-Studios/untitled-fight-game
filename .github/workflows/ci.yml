@@ -38,8 +38,8 @@ jobs:
         with:
           path: main
 
-      - name: Create Exports Folder
-        run: mkdir exports
+      - name: Clear previous exports
+        run: rm exports ; mkdir exports
 
       - name: Build Project
         shell: pwsh
