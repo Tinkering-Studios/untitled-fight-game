@@ -40,11 +40,11 @@ jobs:
 
       - name: Build Project
         env:
-          ue_path: 'C:\Program Files\Epic Games\UE_5.5'
+          ue_path: 'C:\\Program Files\\Epic Games\\UE_5.5'
           target_name: 'untitledfightgame'
-          project_path: '${{github.workspace}}\main\untitledfightgame.uproject'
-          output_path: '${{github.workspace}}\exports'
-        run: $env:ue_path\Engine\Build\BatchFiles\RunUAT.bat -platform=${{matrix.cfg.platform}} -project="$env:project_path" BuildCookRun -nop4 -utf8output -cook -target=$env:target_name -SkipCookingEditorContent -installed -stage -archive -package -build -pak -iostore -compressed -prereqs -archivedirectory="$env:output_path" -distribution -clientconfig=${{matrix.cfg.config}} -serverconfig=${{matrix.cfg.config}} -nodebuginfo -nocompile -nocompileuat'
+          project_path: '${{github.workspace}}\\main\\untitledfightgame.uproject'
+          output_path: '${{github.workspace}}\\exports'
+        run: $env:ue_path\\Engine\\Build\\BatchFiles\\RunUAT.bat -platform=${{matrix.cfg.platform}} -project="$env:project_path" BuildCookRun -nop4 -utf8output -cook -target=$env:target_name -SkipCookingEditorContent -installed -stage -archive -package -build -pak -iostore -compressed -prereqs -archivedirectory="$env:output_path" -distribution -clientconfig=${{matrix.cfg.config}} -serverconfig=${{matrix.cfg.config}} -nodebuginfo -nocompile -nocompileuat
 
       - name: Package distributable
         run: cd export && Compress-Archive . winexport.zip
@@ -53,4 +53,4 @@ jobs:
         uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
         with:
           name: "BloodMoney - Windows ${{matrix.cfg.config}}"
-          path: '${{github.workspace}}/export/winexport.zip'
+          path: '${{github.workspace}}\\export\\winexport.zip'
