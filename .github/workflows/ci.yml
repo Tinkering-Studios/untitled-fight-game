@@ -39,7 +39,7 @@ jobs:
           path: main
 
       - name: Build Project
-        run: ""C:\Program Files\Epic Games\UE_5.5\Engine\Build\BatchFiles\RunUAT.bat"" -ScriptsForProject="${{github.workspace}}/main/untitledfightgame.uproject" -platform=Win64 -project="${{github.workspace}}/main/untitledfightgame.uproject" BuildCookRun -nop4 -utf8output -cook -target=untitledfightgame -unrealexe="C:\Program Files\Epic Games\UE_5.5\Engine\Binaries\Win64\UnrealEditor-Cmd.exe" -platform=Win64 -SkipCookingEditorContent -installed -stage -archive -package -build -pak -iostore -compressed -prereqs -archivedirectory="${{github.workspace}}/exports" -distribution -clientconfig=Shipping -nodebuginfo" -nocompile -nocompileuat
+        run: '"C:\Program Files\Epic Games\UE_5.5\Engine\Build\BatchFiles\RunUAT.bat" -ScriptsForProject="${{github.workspace}}/main/untitledfightgame.uproject" -platform=Win64 -project="${{github.workspace}}/main/untitledfightgame.uproject" BuildCookRun -nop4 -utf8output -cook -target=untitledfightgame -unrealexe="C:\Program Files\Epic Games\UE_5.5\Engine\Binaries\Win64\UnrealEditor-Cmd.exe" -platform=Win64 -SkipCookingEditorContent -installed -stage -archive -package -build -pak -iostore -compressed -prereqs -archivedirectory="${{github.workspace}}/exports" -distribution -clientconfig=Shipping -nodebuginfo -nocompile -nocompileuat'
 
       - name: Package distributable
         run: cd export && Compress-Archive . winexport.zip
