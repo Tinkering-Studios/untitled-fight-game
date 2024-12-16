@@ -24,7 +24,7 @@ jobs:
       fail-fast: false # Don't cancel other matrix jobs if one fails
       matrix:
         cfg:
-        - { config: Development, os: [self-hosted, Windows, X64], platform: 'Win64', ue_path: 'C://Program Files//Epic Games//UE_5.5', target_name: 'untitledfightgame', project_path: '${{github.workspace}}//main//untitledfightgame.uproject' }
+        - { config: Development, os: [self-hosted, Windows, X64], platform: 'Win64', ue_path: 'C:\\Program Files\\Epic Games\\UE_5.5', target_name: 'untitledfightgame', project_path: '${{github.workspace}}\\main\\untitledfightgame.uproject' }
     name: "Windows ${{matrix.cfg.config}}"
     runs-on: ${{matrix.cfg.os}}
     steps:
@@ -42,8 +42,8 @@ jobs:
         run: rm exports ; mkdir exports
 
       - name: Build Project
-        run: |
-        & ${{matrix.cfg.ue_path}}//Engine//Build//BatchFiles//RunUAT.bat -platform=${{matrix.cfg.platform}} -project="${{matrix.cfg.project_path}}" BuildCookRun -nop4 -utf8output -cook -target=${{matrix.cfg.target_name}} -SkipCookingEditorContent -installed -stage -archive -package -build -pak -iostore -compressed -prereqs -archivedirectory="${{github.workspace}}//exports" -distribution -clientconfig=${{matrix.cfg.config}} -serverconfig=${{matrix.cfg.config}} -nodebuginfo -nocompile -nocompileuat
+        shell: pwsh
+        run: '"${{matrix.cfg.ue_path}}\\Engine\\Build\\BatchFiles\\RunUAT.bat" -platform=${{matrix.cfg.platform}} -project="${{matrix.cfg.project_path}}" BuildCookRun -nop4 -utf8output -cook -target=${{matrix.cfg.target_name}} -SkipCookingEditorContent -installed -stage -archive -package -build -pak -iostore -compressed -prereqs -archivedirectory="${{github.workspace}}\\exports" -distribution -clientconfig=${{matrix.cfg.config}} -serverconfig=${{matrix.cfg.config}} -nodebuginfo -nocompile -nocompileuat'
 
       - name: Package distributable
         run: cd exports && Compress-Archive . winexport.zip
@@ -52,4 +52,4 @@ jobs:
         uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
         with:
           name: "BloodMoney - Windows ${{matrix.cfg.config}}"
-          path: '${{github.workspace}}//exports//winexport.zip'
+          path: '${{github.workspace}}\\exports\\winexport.zip'
