@@ -17,16 +17,19 @@ permissions:
   contents: read
 
 jobs:
-  windows: # Windows x64 and x86 build matrix
+  windows:
     permissions:
       contents: write
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.cfg.platform }}-(${{ matrix.cfg.target_name }}-${{ matrix.cfg.config }})
+      cancel-in-progress: true
     strategy:
       fail-fast: false # Don't cancel other matrix jobs if one fails
       matrix:
         cfg:
         - { config: Development, os: [self-hosted, Windows, X64], platform: 'Win64', ue_path: 'C:\UE_5.5', target_name: 'untitledfightgame', project_file: 'untitledfightgame.uproject' }
-    name: "Windows ${{matrix.cfg.config}}"
-    runs-on: ${{matrix.cfg.os}}
+    name: "Windows ${{ matrix.cfg.config }}"
+    runs-on: ${{ matrix.cfg.os }}
     steps:
       - name: Checkout Game
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -38,7 +41,7 @@ jobs:
 
       - name: Build Project
         shell: pwsh
-        run: '${{matrix.cfg.ue_path}}\Engine\Build\BatchFiles\RunUAT.bat BuildCookRun -project="${{github.workspace}}\main\${{matrix.cfg.project_file}}" -nop4 -platform=${{matrix.cfg.platform}} -utf8output -cook -target=${{matrix.cfg.target_name}} -cook -allmaps -build -stage -pak -archive -clientconfig=${{matrix.cfg.config}} -serverconfig=${{matrix.cfg.config}} -archivedirectory="${{github.workspace}}\exports"'
+        run: '${{ matrix.cfg.ue_path }}\Engine\Build\BatchFiles\RunUAT.bat BuildCookRun -project="${{ github.workspace }}\main\${{ matrix.cfg.project_file }}" -nop4 -platform=${{ matrix.cfg.platform }} -utf8output -cook -target=${{ matrix.cfg.target_name }} -cook -allmaps -build -stage -pak -archive -clientconfig=${{ matrix.cfg.config }} -serverconfig=${{ matrix.cfg.config }} -archivedirectory="${{ github.workspace }}\exports"'
 
       - name: Package distributable
         run: cd exports && Compress-Archive . winexport.zip
@@ -46,5 +49,44 @@ jobs:
       - name: Upload Binary
         uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
         with:
-          name: "BloodMoney - Windows ${{matrix.cfg.config}}"
-          path: '${{github.workspace}}\exports\winexport.zip'
+          name: "${{ matrix.cfg.target_name }} - ${{ matrix.cfg.platform }} ${{ matrix.cfg.config }}"
+          path: '${{ github.workspace }}\exports\winexport.zip'
+  
+  linux:
+    permissions:
+      contents: write
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.cfg.platform }}-(${{ matrix.cfg.target_name }}-${{ matrix.cfg.config }})
+      cancel-in-progress: true
+    name: "Linux ${{ matrix.cfg.config }}"
+    runs-on: ${{ matrix.cfg.os }}
+    strategy:
+      fail-fast: false # Don't fail everything if one fails. We want to test each OS/Compiler individually
+      matrix:
+        cfg:
+          - { config: Development, os: [self-hosted, Linux, X64], platform: 'Linux', ue_path: '/home/unreal/UE55', target_name: 'untitledfightgame', project_file: 'untitledfightgame.uproject' }
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@0080882f6c36860b6ba35c610c98ce87d4e2f26f # v2.10.2
+        with:
+          egress-policy: audit
+
+      - name: Checkout Game
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          path: main
+
+      - name: Clear previous exports
+        run: rm -rf exports && mkdir exports
+
+      - name: Build Project
+        run: /usr/bin/env -- "${{ matrix.cfg.ue_path }}/Engine/Build/BatchFiles/RunUAT.sh" BuildCookRun -project="${{ github.workspace }}/main/${{ matrix.cfg.project_file }}" -nop4 -platform=${{matrix.cfg.platform}} -utf8output -cook -target=${{ matrix.cfg.target_name }} -cook -allmaps -build -stage -pak -archive -clientconfig=${{ matrix.cfg.config }} -serverconfig=${{ matrix.cfg.config }} -archivedirectory="${{ github.workspace }}/exports"
+      
+      - name: Package distributable
+        run: cd exports && zip -r linuxexport.zip .
+
+      - name: Upload Binary
+        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
+        with:
+          name: "${{ matrix.cfg.target_name }} - ${{ matrix.cfg.platform }} ${{ matrix.cfg.config }}"
+          path: '${{ github.workspace }}/exports/linuxexport.zip'
