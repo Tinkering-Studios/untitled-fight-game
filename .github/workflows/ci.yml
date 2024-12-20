@@ -36,9 +36,6 @@ jobs:
         with:
           path: main
 
-      - name: Clear previous exports
-        run: rm exports ; mkdir exports
-
       - name: Build Project
         shell: pwsh
         run: '${{ matrix.cfg.ue_path }}\Engine\Build\BatchFiles\RunUAT.bat BuildCookRun -project="${{ github.workspace }}\main\${{ matrix.cfg.project_file }}" -nop4 -platform=${{ matrix.cfg.platform }} -utf8output -cook -target=${{ matrix.cfg.target_name }} -cook -allmaps -build -stage -pak -archive -clientconfig=${{ matrix.cfg.config }} -serverconfig=${{ matrix.cfg.config }} -archivedirectory="${{ github.workspace }}\exports"'
