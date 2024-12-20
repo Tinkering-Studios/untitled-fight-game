@@ -9,6 +9,12 @@ UEventsManager::UEventsManager()
 	PrimaryComponentTick.bCanEverTick = false;
 }
 
+// Called when the game starts
+void UEventsManager::BeginPlay()
+{
+	Super::BeginPlay();
+}
+
 
 FGameplayTag UEventsManager::RequestEvent()
 {
@@ -29,30 +35,49 @@ FGameplayTag UEventsManager::RequestEvent()
 		return tag;
 	}
 	
-	OnEventRequested.Broadcast(tag);
+	if(IsCurrentlyBusy)
+	{
+		QueuedEvents.Emplace(tag);
+	}
+	else
+	{
+		OnEventRequested.Broadcast(tag);
+	}
 	return tag;
 }
 
-void UEventsManager::StartEvent(const FGameplayTag tag)
+void UEventsManager::StartEvent(const FGameplayTag& tag)
 {
-	CurrentEvent = tag;
-	OnEventStarted.Broadcast(CurrentEvent);
+	ActiveEvents.Emplace(tag);
+	OnEventStarted.Broadcast(tag);
 }
 
-void UEventsManager::StopCurrentEvent()
+void UEventsManager::StopEvent(const FGameplayTag& tag)
 {
-	OnEventEnded.Broadcast(CurrentEvent);
-	CurrentEvent = {};
+	OnEventEnded.Broadcast(tag);
+	ActiveEvents.Remove(tag);
 }
 
-FGameplayTag& UEventsManager::GetCurrentEvent()
+void UEventsManager::DoNextQueuedEvent()
 {
-	return CurrentEvent;
+	if(QueuedEvents.IsEmpty())
+	{
+		return;
+	}
+	
+	FGameplayTag& tag = QueuedEvents[0];
+	
+	OnEventRequested.Broadcast(tag);
+
+	QueuedEvents.RemoveAt(0);
 }
 
-// Called when the game starts
-void UEventsManager::BeginPlay()
+TArray<FGameplayTag>& UEventsManager::GetActiveEvents()
 {
-	Super::BeginPlay();
+	return ActiveEvents;
 }
 
+bool UEventsManager::IsEventActive(const FGameplayTag& tag)
+{
+	return ActiveEvents.Contains(tag);
+}

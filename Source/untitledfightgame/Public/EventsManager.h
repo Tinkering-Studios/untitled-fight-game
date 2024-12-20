@@ -21,6 +21,12 @@ public:
 	// Sets default values for this component's properties
 	UEventsManager();
 
+protected:
+	// Called when the game starts
+	virtual void BeginPlay() override;
+
+public:
+
 #pragma region Delegates
 
 	UPROPERTY(BlueprintAssignable)
@@ -38,22 +44,36 @@ public:
 	FGameplayTag RequestEvent();
 
 	UFUNCTION(BlueprintCallable, Category="Events")
-	void StartEvent(const FGameplayTag tag);
+	void StartEvent(const FGameplayTag& tag);
 
 	UFUNCTION(BlueprintCallable, Category="Events")
-	void StopCurrentEvent();
+	void StopEvent(const FGameplayTag& tag);
+
+	UFUNCTION(BlueprintCallable, Category="Events")
+	void DoNextQueuedEvent();
 
 	UFUNCTION(BlueprintPure, Category="Events")
-	FGameplayTag& GetCurrentEvent();
+	TArray<FGameplayTag>& GetActiveEvents();
+	
+	UFUNCTION(BlueprintPure, Category="Events")
+	bool IsEventActive(const FGameplayTag& tag);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Events")
 	TArray<FGameplayTag> EventTags;
 
-protected:
-	// Called when the game starts
-	virtual void BeginPlay() override;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Events")
+	bool IsCurrentlyBusy { false };
 
-	FGameplayTag CurrentEvent;
+protected:
+
+	TArray<FGameplayTag> ActiveEvents {};
+
+	/**
+	 * @brief Events that are queued to run right after.
+	 *
+	 * This prevents event spam, meaning the UI flows nicely.
+	 */
+	TArray<FGameplayTag> QueuedEvents {};
 
 		
 };
