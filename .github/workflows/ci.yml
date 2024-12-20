@@ -45,6 +45,10 @@ jobs:
         with:
           name: "${{ matrix.cfg.target_name }} - ${{ matrix.cfg.platform }} ${{ matrix.cfg.config }}"
           path: '${{ github.workspace }}\exports'
+
+      - name: Cleanup exports Folder
+        shell: pwsh
+        run: 'if (Test-Path -path exports) { rm -r exports }'
   
   linux:
     permissions:
