@@ -28,7 +28,7 @@ jobs:
       matrix:
         cfg:
         - { config: Development, os: [self-hosted, Windows, X64], platform: 'Win64', ue_path: 'C:\UE_5.5', target_name: 'untitledfightgame', project_file: 'untitledfightgame.uproject' }
-        - { config: Shipping, os: [self-hosted, Windows, X64], platform: 'Win64', ue_path: 'C:\UE_5.5', target_name: 'untitledfightgame', project_file: 'untitledfightgame.uproject', extra_flags: '-distribution -nodebuginfo -compressed' }
+        - { config: Shipping, os: [self-hosted, Windows, X64], platform: 'Win64', ue_path: 'C:\UE_5.5', target_name: 'untitledfightgame', project_file: 'untitledfightgame.uproject', extra_flags: '-distribution -nodebuginfo -compressed -SkipCookingEditorContent' }
     name: "Windows ${{ matrix.cfg.config }}"
     runs-on: ${{ matrix.cfg.os }}
     steps:
@@ -39,7 +39,7 @@ jobs:
 
       - name: Build Project
         shell: pwsh
-        run: '${{ matrix.cfg.ue_path }}\Engine\Build\BatchFiles\RunUAT.bat BuildCookRun -project="${{ github.workspace }}\main\${{ matrix.cfg.project_file }}" -nop4 -platform=${{ matrix.cfg.platform }} -utf8output -cook -target=${{ matrix.cfg.target_name }} -cook -allmaps -build -stage -pak -archive -clientconfig=${{ matrix.cfg.config }} -serverconfig=${{ matrix.cfg.config }} ${{ matrix.cfg.extra_flags }} -archivedirectory="${{ github.workspace }}\exports"'
+        run: '${{ matrix.cfg.ue_path }}\Engine\Build\BatchFiles\RunUAT.bat BuildCookRun -project="${{ github.workspace }}\main\${{ matrix.cfg.project_file }}" -nop4 -platform=${{ matrix.cfg.platform }} -utf8output -nocompileeditor -skipbuildeditor -cook -target=${{ matrix.cfg.target_name }} -installed -build -stage -pak -archive -iostore -prereqs -clientconfig=${{ matrix.cfg.config }} -serverconfig=${{ matrix.cfg.config }} ${{ matrix.cfg.extra_flags }} -archivedirectory="${{ github.workspace }}\exports" -nocompile -nocompileuat'
 
       - name: Upload Exported Game
         uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
@@ -64,7 +64,7 @@ jobs:
       matrix:
         cfg:
           - { config: Development, os: [self-hosted, Linux, X64], platform: 'Linux', ue_path: '/home/unreal/UE55', target_name: 'untitledfightgame', project_file: 'untitledfightgame.uproject' }
-          - { config: Shipping, os: [self-hosted, Linux, X64], platform: 'Linux', ue_path: '/home/unreal/UE55', target_name: 'untitledfightgame', project_file: 'untitledfightgame.uproject', extra_flags: '-distribution -nodebuginfo -compressed' }
+          - { config: Shipping, os: [self-hosted, Linux, X64], platform: 'Linux', ue_path: '/home/unreal/UE55', target_name: 'untitledfightgame', project_file: 'untitledfightgame.uproject', extra_flags: '-distribution -nodebuginfo -compressed -SkipCookingEditorContent' }
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@0080882f6c36860b6ba35c610c98ce87d4e2f26f # v2.10.2
@@ -76,8 +76,11 @@ jobs:
         with:
           path: main
 
+      - name: Create exports Folder
+        run: mkdir exports
+
       - name: Build Project
-        run: /usr/bin/env -- "${{ matrix.cfg.ue_path }}/Engine/Build/BatchFiles/RunUAT.sh" BuildCookRun -project="${{ github.workspace }}/main/${{ matrix.cfg.project_file }}" -nop4 -platform=${{matrix.cfg.platform}} -utf8output -cook -target=${{ matrix.cfg.target_name }} -cook -allmaps -build -stage -pak -archive -clientconfig=${{ matrix.cfg.config }} -serverconfig=${{ matrix.cfg.config }} ${{ matrix.cfg.extra_flags }} -archivedirectory="${{ github.workspace }}/exports"
+        run: /usr/bin/env -- "${{ matrix.cfg.ue_path }}/Engine/Build/BatchFiles/RunUAT.sh" BuildCookRun -project="${{ github.workspace }}/main/${{ matrix.cfg.project_file }}" -nop4 -platform=${{matrix.cfg.platform}} -utf8output -nocompileeditor -skipbuildeditor -cook -target=${{ matrix.cfg.target_name }} -installed -build -stage -pak -archive -iostore -prereqs -clientconfig=${{ matrix.cfg.config }} -serverconfig=${{ matrix.cfg.config }} ${{ matrix.cfg.extra_flags }} -archivedirectory="${{ github.workspace }}/exports -nocompile -nocompileuat"
 
       - name: Upload Exported Game
         uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
@@ -86,4 +89,4 @@ jobs:
           path: '${{ github.workspace }}/exports'
 
       - name: Cleanup exports Folder
-        run: rm -rf exports && mkdir exports
+        run: rm -rf exports
