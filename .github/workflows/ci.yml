@@ -84,7 +84,7 @@ jobs:
         run: rm -rf exports && mkdir exports
 
       - name: Build Project
-        run: /usr/bin/env -- "${{ matrix.cfg.ue_path }}/Engine/Build/BatchFiles/RunUAT.sh" -ScriptsForProject="${{ github.workspace }}/main/${{ matrix.cfg.project_file }}" Turnkey -command=VerifySDK -platform=${{ matrix.cfg.platform }} -UpdateIfNeeded  BuildCookRun -project="${{ github.workspace }}/main/${{ matrix.cfg.project_file }}" -nop4 -platform=${{ matrix.cfg.platform }} -unrealexe="${{ matrix.cfg.ue_path }}/Engine/Binaries/Linux/UnrealEditor" -utf8output -target=${{ matrix.cfg.target_name }} -cook -installed -stage -archive -package -pak -iostore -compressed -prereqs -clientconfig=${{ matrix.cfg.config }} -serverconfig=${{ matrix.cfg.config }} ${{ matrix.cfg.extra_flags }} -archivedirectory="${{ github.workspace }}/exports" -nocompile -nocompileuat
+        run: /usr/bin/env -- "${{ matrix.cfg.ue_path }}/Engine/Build/BatchFiles/RunUAT.sh" -ScriptsForProject="${{ github.workspace }}/main/${{ matrix.cfg.project_file }}" Turnkey -command=VerifySDK -platform=${{ matrix.cfg.platform }} -UpdateIfNeeded -EditorIO  BuildCookRun -project="${{ github.workspace }}/main/${{ matrix.cfg.project_file }}" -nop4 -platform=${{ matrix.cfg.platform }} -unrealexe="${{ matrix.cfg.ue_path }}/Engine/Binaries/Linux/UnrealEditor" -utf8output -target=${{ matrix.cfg.target_name }} -cook -installed -stage -archive -package -pak -iostore -compressed -prereqs -clientconfig=${{ matrix.cfg.config }} -serverconfig=${{ matrix.cfg.config }} ${{ matrix.cfg.extra_flags }} -archivedirectory="${{ github.workspace }}/exports" -nocompile -nocompileuat
 
       - name: Upload Exported Game
         uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
