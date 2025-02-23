@@ -27,11 +27,14 @@ void UStatisticsComponent::ModifyCurrentValueOfStatistic(const FGameplayTag tag,
 
 	OnStatisticUpdated.Broadcast(tag);
 
-	if(statInfo.currentValue >= statInfo.maxValue)
+	if (statInfo.currentValue >= statInfo.maxValue)
+	{
 		OnStatisticReachedMax.Broadcast(tag);
-
-	if(statInfo.currentValue <= 0)
+	}
+	else if(statInfo.currentValue <= 0)
+	{
 		OnStatisticReachedZero.Broadcast(tag);
+	}
 }
 
 void UStatisticsComponent::SetCurrentValueOfStatistic(const FGameplayTag tag, float value)
@@ -50,10 +53,13 @@ void UStatisticsComponent::SetCurrentValueOfStatistic(const FGameplayTag tag, fl
 	OnStatisticUpdated.Broadcast(tag);
 
 	if(statInfo.currentValue == statInfo.maxValue)
+	{
 		OnStatisticReachedMax.Broadcast(tag);
-
-	if(statInfo.currentValue == 0)
+	}
+	else if(statInfo.currentValue == 0)
+	{
 		OnStatisticReachedZero.Broadcast(tag);
+	}
 }
 
 void UStatisticsComponent::ModifyMaxValueOfStatistic(const FGameplayTag tag, float value)

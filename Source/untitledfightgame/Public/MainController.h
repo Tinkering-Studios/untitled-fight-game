@@ -90,6 +90,8 @@ public:
 	
 #pragma region Delegates
 
+	// This could be one delegate as an enum, but i guess this is pretty readable.
+	
 	UPROPERTY(BlueprintAssignable)
 	FLightAttack OnLightAttack;
 

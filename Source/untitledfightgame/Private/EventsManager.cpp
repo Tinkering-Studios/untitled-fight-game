@@ -15,7 +15,6 @@ void UEventsManager::BeginPlay()
 	Super::BeginPlay();
 }
 
-
 FGameplayTag UEventsManager::RequestEvent()
 {
 	FGameplayTag tag{};
