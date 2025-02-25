@@ -41,7 +41,7 @@ jobs:
 
       - name: Build Project
         shell: pwsh
-        run: '${{ matrix.cfg.ue_path }}\Engine\Build\BatchFiles\Build.bat -Target="${{ matrix.cfg.target_name }}Editor ${{ matrix.cfg.platform }} ${{ matrix.cfg.config }}" -Project="${{ github.workspace }}\${{ matrix.cfg.project_file }}" -Target="ShaderCompileWorker ${{ matrix.cfg.platform }} ${{ matrix.cfg.config }} -Quiet" -WaitMutex -FromMsBuild -architecture=x64'
+        run: '${{ matrix.cfg.ue_path }}\Engine\Build\BatchFiles\Build.bat -Target="${{ matrix.cfg.target_name }} ${{ matrix.cfg.platform }} ${{ matrix.cfg.config }}" -Project="${{ github.workspace }}\${{ matrix.cfg.project_file }}" -WaitMutex -FromMsBuild -architecture=x64'
 
       - name: Cook Project
         shell: pwsh
@@ -84,7 +84,7 @@ jobs:
         run: rm -rf exp && mkdir exp
 
       - name: Build Project
-        run: /usr/bin/env -- "${{ matrix.cfg.ue_path }}/Engine/Build/BatchFiles/Linux/Build.sh" -Target="${{ matrix.cfg.target_name }}Editor ${{ matrix.cfg.platform }} ${{ matrix.cfg.config }}" -Project="${{ github.workspace }}\${{ matrix.cfg.project_file }}" -Target="ShaderCompileWorker ${{ matrix.cfg.platform }} ${{ matrix.cfg.config }} -Quiet" -WaitMutex -FromMsBuild -architecture=x64
+        run: /usr/bin/env -- "${{ matrix.cfg.ue_path }}/Engine/Build/BatchFiles/Linux/Build.sh" -Target="${{ matrix.cfg.target_name }} ${{ matrix.cfg.platform }} ${{ matrix.cfg.config }}" -Project="${{ github.workspace }}/${{ matrix.cfg.project_file }}" -WaitMutex -FromMsBuild -architecture=x64
 
       - name: Cook Project
         run: /usr/bin/env  -- "${{ matrix.cfg.ue_path }}/Engine/Build/BatchFiles/RunUAT.sh"  BuildCookRun -project="${{ github.workspace }}/${{ matrix.cfg.project_file }}" -nop4 -utf8output -nocompileeditor -skipbuildeditor -cook  -project="${{ github.workspace }}/${{ matrix.cfg.project_file }}" -target=${{ matrix.cfg.target_name }}  -unrealexe="${{ matrix.cfg.ue_path }}/Engine/Binaries/Linux/UnrealEditor" -platform=${{ matrix.cfg.platform }} -installed -stage -archive -package -pak -iostore -compressed -prereqs ${{ matrix.cfg.extra_flags }} -archivedirectory="${{ github.workspace }}/exp/" -clientconfig=${{ matrix.cfg.config }} -nocompile -nocompileuat
