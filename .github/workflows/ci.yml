@@ -27,7 +27,7 @@ jobs:
       fail-fast: false # Don't cancel other matrix jobs if one fails
       matrix:
         cfg:
-        - { config: Development, os: [self-hosted, Windows, X64], platform: 'Win64', ue_path: 'C:\UE_5.5', target_name: 'untitledfightgame', project_file: 'untitledfightgame.uproject', extra_flags: '-buildmachine -AllowStdOutLogVerbosity' }
+        - { config: Development, os: [self-hosted, Windows, X64], platform: 'Win64', ue_path: 'C:\UE_5.5', target_name: 'untitledfightgame', project_file: 'untitledfightgame.uproject', extra_flags: '-SkipCookingEditorContent -buildmachine -AllowStdOutLogVerbosity' }
         - { config: Shipping, os: [self-hosted, Windows, X64], platform: 'Win64', ue_path: 'C:\UE_5.5', target_name: 'untitledfightgame', project_file: 'untitledfightgame.uproject', extra_flags: '-distribution -nodebuginfo -SkipCookingEditorContent -buildmachine -AllowStdOutLogVerbosity' }
     name: "Windows ${{ matrix.cfg.config }}"
     runs-on: ${{ matrix.cfg.os }}
@@ -39,6 +39,10 @@ jobs:
         shell: pwsh
         run: 'if (Test-Path -path exports) { rm -r exports }'
 
+      - name: Verify Platform SDK
+        shell: pwsh
+        run: '${{ matrix.cfg.ue_path }}\Engine\Build\BatchFiles\RunUAT.bat -ScriptsForProject="${{ github.workspace }}\${{ matrix.cfg.project_file }}" Turnkey -command=VerifySdk -platform=${{ matrix.cfg.platform }}'
+
       - name: Build Project Editor
         shell: pwsh
         run: '${{ matrix.cfg.ue_path }}\Engine\Build\BatchFiles\Build.bat -Target="${{ matrix.cfg.target_name }}Editor ${{ matrix.cfg.platform }} Development" -Project="${{ github.workspace }}\${{ matrix.cfg.project_file }}" -WaitMutex -FromMsBuild -architecture=x64'
@@ -47,9 +51,9 @@ jobs:
         shell: pwsh
         run: '${{ matrix.cfg.ue_path }}\Engine\Build\BatchFiles\Build.bat -Target="${{ matrix.cfg.target_name }} ${{ matrix.cfg.platform }} ${{ matrix.cfg.config }}" -Project="${{ github.workspace }}\${{ matrix.cfg.project_file }}" -WaitMutex -FromMsBuild -architecture=x64'
 
-      - name: Cook Project
+      - name: Cook and Export Project
         shell: pwsh
-        run: '${{ matrix.cfg.ue_path }}\Engine\Build\BatchFiles\RunUAT.bat BuildCookRun -project="${{ github.workspace }}\${{ matrix.cfg.project_file }}" -nop4 -nocompileeditor -skipbuildeditor -cook -project="${{ github.workspace }}\${{ matrix.cfg.project_file }}" -target=${{ matrix.cfg.target_name }} -unrealexe="${{ matrix.cfg.ue_path }}\Engine\Binaries\Win64\UnrealEditor.exe" -platform=${{ matrix.cfg.platform }} -installed -stage -archive -package -pak -iostore -compressed -prereqs ${{ matrix.cfg.extra_flags }} -archivedirectory="${{ github.workspace }}\exports" -clientconfig=${{ matrix.cfg.config }} -nocompile -nocompileuat'
+        run: '${{ matrix.cfg.ue_path }}\Engine\Build\BatchFiles\RunUAT.bat BuildCookRun -project="${{ github.workspace }}\${{ matrix.cfg.project_file }}" -nop4 -utf8output -nocompileeditor -skipbuildeditor -cook  -project="${{ github.workspace }}\${{ matrix.cfg.project_file }}" -target=${{ matrix.cfg.target_name }} -unrealexe="${{ matrix.cfg.ue_path }}\Engine\Binaries\Win64\UnrealEditor.exe" -platform=${{ matrix.cfg.platform }} -installed -stage -archive -package -pak -iostore -compressed -prereqs ${{ matrix.cfg.extra_flags }} -archivedirectory="${{ github.workspace }}\exports" -clientconfig=${{ matrix.cfg.config }} -nocompile -nocompileuat'
 
       - name: Upload Exported Game
         uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
@@ -73,7 +77,7 @@ jobs:
       fail-fast: false # Don't fail everything if one fails. We want to test each OS/Compiler individually
       matrix:
         cfg:
-          - { config: Development, os: [self-hosted, Linux, X64], platform: 'Linux', ue_path: '/home/unreal/UE55', target_name: 'untitledfightgame', project_file: 'untitledfightgame.uproject', extra_flags: '-buildmachine -AllowStdOutLogVerbosity' }
+          - { config: Development, os: [self-hosted, Linux, X64], platform: 'Linux', ue_path: '/home/unreal/UE55', target_name: 'untitledfightgame', project_file: 'untitledfightgame.uproject', extra_flags: '-SkipCookingEditorContent -buildmachine -AllowStdOutLogVerbosity' }
           - { config: Shipping, os: [self-hosted, Linux, X64], platform: 'Linux', ue_path: '/home/unreal/UE55', target_name: 'untitledfightgame', project_file: 'untitledfightgame.uproject', extra_flags: '-distribution -nodebuginfo -SkipCookingEditorContent -buildmachine -AllowStdOutLogVerbosity' }
     steps:
       - name: Harden Runner
@@ -85,7 +89,10 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Create exports Folder
-        run: rm -rf exp && mkdir exp
+        run: rm -rf exports && mkdir exports
+
+      - name: Verify Platform SDK
+        run: /usr/bin/env -- "${{ matrix.cfg.ue_path }}/Engine/Build/BatchFiles/RunUAT.sh"  -ScriptsForProject="${{ github.workspace }}/${{ matrix.cfg.project_file }}" Turnkey -command=VerifySdk -platform=${{ matrix.cfg.platform }}
 
       - name: Build Project Editor
         run: /usr/bin/env -- "${{ matrix.cfg.ue_path }}/Engine/Build/BatchFiles/Linux/Build.sh" -Target="${{ matrix.cfg.target_name }}Editor ${{ matrix.cfg.platform }} Development" -Project="${{ github.workspace }}/${{ matrix.cfg.project_file }}" -WaitMutex -FromMsBuild -architecture=x64
@@ -93,14 +100,14 @@ jobs:
       - name: Build Project
         run: /usr/bin/env -- "${{ matrix.cfg.ue_path }}/Engine/Build/BatchFiles/Linux/Build.sh" -Target="${{ matrix.cfg.target_name }} ${{ matrix.cfg.platform }} ${{ matrix.cfg.config }}" -Project="${{ github.workspace }}/${{ matrix.cfg.project_file }}" -WaitMutex -FromMsBuild -architecture=x64
 
-      - name: Cook Project
-        run: /usr/bin/env  -- "${{ matrix.cfg.ue_path }}/Engine/Build/BatchFiles/RunUAT.sh"  BuildCookRun -project="${{ github.workspace }}/${{ matrix.cfg.project_file }}" -nop4 -utf8output -nocompileeditor -skipbuildeditor -cook  -project="${{ github.workspace }}/${{ matrix.cfg.project_file }}" -target=${{ matrix.cfg.target_name }}  -unrealexe="${{ matrix.cfg.ue_path }}/Engine/Binaries/Linux/UnrealEditor" -platform=${{ matrix.cfg.platform }} -installed -stage -archive -package -pak -iostore -compressed -prereqs ${{ matrix.cfg.extra_flags }} -archivedirectory="${{ github.workspace }}/exp/" -clientconfig=${{ matrix.cfg.config }} -nocompile -nocompileuat
+      - name: Cook and Export Project
+        run: /usr/bin/env  -- "${{ matrix.cfg.ue_path }}/Engine/Build/BatchFiles/RunUAT.sh"  BuildCookRun -project="${{ github.workspace }}/${{ matrix.cfg.project_file }}" -nop4 -utf8output -nocompileeditor -skipbuildeditor -cook  -project="${{ github.workspace }}/${{ matrix.cfg.project_file }}" -target=${{ matrix.cfg.target_name }}  -unrealexe="${{ matrix.cfg.ue_path }}/Engine/Binaries/Linux/UnrealEditor" -platform=${{ matrix.cfg.platform }} -installed -stage -archive -package -pak -iostore -compressed -prereqs ${{ matrix.cfg.extra_flags }} -archivedirectory="${{ github.workspace }}/exports/" -clientconfig=${{ matrix.cfg.config }} -nocompile -nocompileuat
 
       - name: Upload Exported Game
         uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
         with:
           name: "${{ matrix.cfg.target_name }} - ${{ matrix.cfg.platform }} ${{ matrix.cfg.config }}"
-          path: '${{ github.workspace }}/exp'
+          path: '${{ github.workspace }}/exports'
 
       - name: Cleanup exports Folder
-        run: rm -rf exp
+        run: rm -rf exports
