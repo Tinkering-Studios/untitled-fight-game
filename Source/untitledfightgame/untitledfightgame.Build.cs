@@ -10,8 +10,8 @@ public class untitledfightgame : ModuleRules
 	
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "CommonUI" });
 		
-		PublicDependencyModuleNames.AddRange(new string[] { "GameplayTags", "EnhancedInput", "AIModule", "CommonInput" });
-		PrivateDependencyModuleNames.AddRange(new string[] { "GameplayTags", "EnhancedInput", "AIModule", "CommonInput" });
+		PublicDependencyModuleNames.AddRange(new string[] { "GameplayTags", "EnhancedInput", "AIModule", "CommonInput", "AnimationBudgetAllocator", "RenderCore" });
+		PrivateDependencyModuleNames.AddRange(new string[] { "GameplayTags", "EnhancedInput", "AIModule", "CommonInput", "AnimationBudgetAllocator", "RenderCore" });
 		
 		PublicDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore", "UMG", "Paper2D" });
 		PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore", "UMG", "Paper2D" });

@@ -16,7 +16,7 @@ class UNTITLEDFIGHTGAME_API ABaseCharacter : public ACharacter
 
 public:
 	// Sets default values for this character's properties
-	ABaseCharacter();
+	explicit ABaseCharacter(const FObjectInitializer& ObjectInitializer);
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
@@ -55,9 +55,5 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Screen Shake");
 	TSubclassOf<class UCameraShakeBase> BigHitScreenShake;
-    
-private:
-
-	FGameplayTag HealthTag;
 
 };

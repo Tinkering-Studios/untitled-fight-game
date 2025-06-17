@@ -16,5 +16,7 @@ class UNTITLEDFIGHTGAME_API UHelperFunctions : public UBlueprintFunctionLibrary
 
 	UFUNCTION(BlueprintPure, Category = "HelperFunctions")
 	static bool IsEditor();
-	
+
+	UFUNCTION(BlueprintCallable, Category = "HelperFunctions")
+	static UTexture2D* GetLastRenderedFrame(UObject* WorldContextObject);
 };

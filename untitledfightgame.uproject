@@ -149,6 +149,10 @@
 		{
 			"Name": "ChaosCloth",
 			"Enabled": false
+		},
+		{
+			"Name": "AnimationBudgetAllocator",
+			"Enabled": true
 		}
 	]
 }
